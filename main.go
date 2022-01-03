@@ -35,6 +35,7 @@ func main() {
 	var udid = flag.String("udid", "", "Device UDID")
 	var devicesCmd = flag.Bool("devices", false, "List devices then exit")
 	var pullCmd = flag.Bool("pull", false, "Pull video")
+	var enableCmd = flag.Bool("enable", false, "Enable QT config on Device")
 	var pushSpec = flag.String("pushSpec", "tcp://127.0.0.1:7879", "push image to tcp address")
 	var file = flag.String("file", "", "File to save h264 nalus into")
 	var reductionRatio = flag.Float64("screenRatio", 0.5, "Screen reduction ratio")
@@ -54,6 +55,8 @@ func main() {
 		return
 	} else if *pullCmd {
 		gopull(*pushSpec, *file, *udid)
+	} else if *enableCmd {
+		enableQT(*udid)
 	} else {
 		flag.Usage()
 	}
@@ -71,6 +74,18 @@ func devices() {
 	output := screencapture.PrintDeviceDetails(deviceList)
 
 	printJSON(map[string]interface{}{"devices": output})
+}
+
+func enableQT(udid string) {
+	device, err := FindIosDevice(udid)
+	if err != nil {
+		printErrJSON(err, "no device found to activate")
+	}
+
+	device, err = EnableQTConfig(device)
+	if err != nil {
+		printErrJSON(err, "Error enabling QT config")
+	}
 }
 
 //func stripSerial(usb *gousb.Device) string {

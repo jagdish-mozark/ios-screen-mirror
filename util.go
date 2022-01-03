@@ -4,11 +4,12 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"github.com/google/gousb"
-	log "github.com/sirupsen/logrus"
 	"image"
 	"math"
 	"time"
+
+	"github.com/google/gousb"
+	log "github.com/sirupsen/logrus"
 )
 
 const (
